@@ -29,5 +29,5 @@ Run the Frontend:Bashcd frontend
 npm install
 npm run dev
 Method 2: Manual Configuration (No Docker)If you prefer using a local Postgres installation:Create a database named trellodb.Update backend/app/database.py:PythonSQLALCHEMY_DATABASE_URL = "postgresql://your_user:your_password@localhost:5432/trellodb"
-📡 API DocumentationOnce the backend is running, full interactive documentation (Swagger UI) is available at:👉 http://localhost:8000/docsMethodEndpointDescriptionPOST/loginAuthenticates user & returns JWT TokenGET/boardsFetches all boards for the authenticated userPOST/columnsCreates a new list in a boardPOST/tasksCreates a new taskPUT/tasks/{id}/moveUpdates task position & column (triggers WebSocket)WS/ws/{board_id}WebSocket connection endpoint
+📡 API DocumentationOnce the backend is running, full interactive documentation (Swagger UI) is available at:👉 https://project-management-app-trello-backend.onrender.com/docsMethodEndpointDescriptionPOST/loginAuthenticates user & returns JWT TokenGET/boardsFetches all boards for the authenticated userPOST/columnsCreates a new list in a boardPOST/tasksCreates a new taskPUT/tasks/{id}/moveUpdates task position & column (triggers WebSocket)WS/ws/{board_id}WebSocket connection endpoint
 ```

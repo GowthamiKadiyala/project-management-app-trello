@@ -14,9 +14,12 @@ function Dashboard() {
 
   const fetchBoards = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/boards", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await axios.get(
+        "https://project-management-app-trello-backend.onrender.com/boards",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       setBoards(res.data);
     } catch (error) {
       alert("Failed to fetch boards");
@@ -25,7 +28,7 @@ function Dashboard() {
 
   const createBoard = async () => {
     await axios.post(
-      "http://localhost:8000/boards",
+      "https://project-management-app-trello-backend.onrender.com/boards",
       { title: newBoardTitle },
       { headers: { Authorization: `Bearer ${token}` } }
     );

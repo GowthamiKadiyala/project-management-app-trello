@@ -10,7 +10,10 @@ function Login() {
 
   const handleRegister = async () => {
     try {
-      await axios.post("http://localhost:8000/register", { email, password });
+      await axios.post(
+        "https://project-management-app-trello-backend.onrender.com/register",
+        { email, password }
+      );
       alert("Registered! Now Click Login.");
     } catch (error) {
       alert("Registration Failed");
@@ -19,10 +22,13 @@ function Login() {
 
   const handleLogin = async () => {
     try {
-      const res = await axios.post("http://localhost:8000/login", {
-        email,
-        password,
-      });
+      const res = await axios.post(
+        "https://project-management-app-trello-backend.onrender.com/login",
+        {
+          email,
+          password,
+        }
+      );
       localStorage.setItem("token", res.data.access_token);
       navigate("/dashboard"); // Go to dashboard after login
     } catch (e) {

@@ -22,9 +22,12 @@ function BoardView() {
   // --- MOVED UP: Define this BEFORE useEffect ---
   const fetchBoardData = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/boards", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await axios.get(
+        "https://project-management-app-trello-backend.onrender.com/boards",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       const currentBoard = res.data.find((b) => b.id === parseInt(boardId));
 
       if (currentBoard) {
@@ -69,7 +72,7 @@ function BoardView() {
 
     try {
       await axios.put(
-        `http://localhost:8000/tasks/${taskId}/move`,
+        `https://project-management-app-trello-backend.onrender.com/tasks/${taskId}/move`,
         { column_id: parseInt(newColumnId), position: 1.0 },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -84,7 +87,7 @@ function BoardView() {
 
   const addColumn = async () => {
     await axios.post(
-      "http://localhost:8000/columns",
+      "https://project-management-app-trello-backend.onrender.com/columns",
       {
         title: newColTitle,
         position: board.columns.length + 1,
@@ -99,7 +102,7 @@ function BoardView() {
 
   const addTask = async (colId) => {
     await axios.post(
-      "http://localhost:8000/tasks",
+      "https://project-management-app-trello-backend.onrender.com/tasks",
       { content: newTaskContent[colId], position: 1.0, column_id: colId },
       { headers: { Authorization: `Bearer ${token}` } }
     );

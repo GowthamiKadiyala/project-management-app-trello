@@ -14,7 +14,7 @@ function Analytics({ boardId, onClose }) {
     const fetchData = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:8000/boards/${boardId}/analytics`,
+          `https://project-management-app-trello-backend.onrender.com/boards/${boardId}/analytics`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
