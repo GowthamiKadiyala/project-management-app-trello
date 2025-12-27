@@ -1,33 +1,74 @@
-# 📋 SyncBoard: Real-Time Kanban Task Manager
+# SyncBoard (Trello Clone)
 
-**SyncBoard** is a full-stack, enterprise-grade task management platform inspired by Trello. It enables teams to collaborate in real-time using boards, lists, and tasks, featuring sub-millisecond updates across connected clients via WebSockets.
+A full-stack project management application featuring a Kanban-style interface for organizing tasks, lists, and boards. Built with a decoupled architecture using **React** (Frontend) and **FastAPI** (Backend), containerized with **Docker**, and deployed on **Render**.
 
-![Status](https://img.shields.io/badge/Status-Active-success?style=flat-square)
-![Stack](https://img.shields.io/badge/Stack-Full_Stack-blue?style=flat-square)
-![License](https://img.shields.io/badge/License-MIT-orange?style=flat-square)
-![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)
+![Project Status](https://img.shields.io/badge/status-live-success)
+![License](https://img.shields.io/badge/license-MIT-blue)
+
+## 🚀 Live Demo
+**Frontend:** [https://project-management-app-trello-frontend.onrender.com](https://project-management-app-trello-frontend.onrender.com)  
+**Backend API:** [https://project-management-app-trello-backend.onrender.com/docs](https://project-management-app-trello-backend.onrender.com/docs) (Swagger UI)
 
 ---
 
-## 🏗️ System Architecture
+## 🛠 Tech Stack
 
-ß
-The application follows a decoupled **Client-Server architecture** designed for scalability and low latency.
+### **Frontend**
+* **React (Vite):** Selected for high performance and fast build times.
+* **Axios:** Handles HTTP requests with interceptors for JWT authentication.
+* **TailwindCSS:** Responsive design for the Kanban board layout.
+* **Drag & Drop API:** Custom implementation for moving tasks between columns.
 
-```mermaid
-graph TD
-    Client[React Client (Vite)] -->|HTTP REST| API[FastAPI Backend]
-    Client -->|WebSocket (ws://)| SocketMgr[Connection Manager]
-    API -->|Read/Write| DB[(PostgreSQL Docker)]
-    SocketMgr -->|Broadcast Updates| Client2[Other Clients]
-    SocketMgr -->|Broadcast Updates| Client3[Other Clients]
-Core ComponentsFrontend (SPA): React 18 with optimistic UI updates. Uses @dnd-kit for complex drag-and-drop collision detection.Backend (API): FastAPI (Async Python) serving REST endpoints and managing WebSocket connections.Real-Time Engine: A custom ConnectionManager class that tracks active board sessions and broadcasts events (PUB/SUB pattern).Data Layer: PostgreSQL containerized via Docker, utilizing SQLAlchemy ORM for relational integrity.🛠️ Tech StackBackend (/backend)Framework: FastAPI (Python 3.10+)Database: PostgreSQL 15ORM: SQLAlchemyValidation: Pydantic v2Authentication: OAuth2 with Password Flow (JWT)Real-time: Native WebSocketsContainerization: Docker & Docker ComposeFrontend (/frontend)Framework: React 18 + ViteLanguage: JavaScript (ES6+)State Management: React Hooks (useRef, useState, useEffect)Drag & Drop: @dnd-kit/core, @dnd-kit/sortableHTTP Client: AxiosData Visualization: Chart.js (react-chartjs-2)✨ Key Features🔐 Secure Authentication: JWT-based login and registration system with password hashing (bcrypt).⚡ Real-Time Collaboration: Instant updates. When User A moves a card, User B sees it move without refreshing.🖱️ Drag-and-Drop Interface: Smooth, accessible drag-and-drop for tasks using modern pointer events.📊 Analytics Dashboard: Built-in data visualization to track task status distribution (To Do vs. Done).📱 Responsive Design: Works on desktop and tablet viewports.🚀 Getting StartedPrerequisitesDocker Desktop (for the database)Node.js v18+ (for the frontend)Python 3.10+ (for the backend)Method 1: The Docker Way (Recommended)Start the Database:Bashdocker-compose up -d
-Note: The database runs on port 5433 to prevent conflicts with local Postgres instances.Run the Backend:Bashcd backend
-pip install -r requirements.txt
-uvicorn app.main:app --reload --port 8000
-Run the Frontend:Bashcd frontend
-npm install
-npm run dev
-Method 2: Manual Configuration (No Docker)If you prefer using a local Postgres installation:Create a database named trellodb.Update backend/app/database.py:PythonSQLALCHEMY_DATABASE_URL = "postgresql://your_user:your_password@localhost:5432/trellodb"
-📡 API DocumentationOnce the backend is running, full interactive documentation (Swagger UI) is available at:👉 https://project-management-app-trello-backend.onrender.com/docsMethodEndpointDescriptionPOST/loginAuthenticates user & returns JWT TokenGET/boardsFetches all boards for the authenticated userPOST/columnsCreates a new list in a boardPOST/tasksCreates a new taskPUT/tasks/{id}/moveUpdates task position & column (triggers WebSocket)WS/ws/{board_id}WebSocket connection endpoint
-```
+### **Backend**
+* **FastAPI (Python):** Chosen for its asynchronous capabilities and automatic validation via Pydantic schemas.
+* **SQLAlchemy ORM:** Manages database interactions and relationships.
+* **PostgreSQL:** Relational database ensuring data integrity with foreign keys and cascading deletes.
+* **JWT (JSON Web Tokens):** Stateless authentication mechanism for secure user sessions.
+
+### **DevOps & Infrastructure**
+* **Docker:** Used for containerizing the backend service to ensure environment consistency.
+* **Render:** Cloud platform used for hosting both the static frontend and the web service backend.
+* **CORS Configuration:** Securely whitelisted production domains to prevent unauthorized API access.
+
+---
+
+## ✨ Key Features
+
+* **User Authentication:** Secure Registration and Login using hashed passwords (Bcrypt) and JWT access tokens.
+* **Kanban Board:** Create, Read, Update, and Delete (CRUD) support for Boards, Columns, and Tasks.
+* **Drag and Drop:** Intuitive UI for moving tasks between different stages (e.g., "To Do" -> "Done").
+* **Data Persistence:** Robust PostgreSQL schema with relationships (One-to-Many) between Users, Boards, and Tasks.
+* **Responsive Design:** Optimized for various screen sizes.
+
+---
+
+## 🏗 Architecture & Challenges Solved
+
+### **1. The N+1 Problem**
+* **Challenge:** Initial implementation fired separate database queries for every column and task, causing performance bottlenecks.
+* **Solution:** Implemented **SQLAlchemy Eager Loading** (`joinedload`) to fetch Boards, Columns, and Tasks in a single optimized SQL query.
+
+### **2. Deployment & CORS**
+* **Challenge:** The production frontend was blocked from accessing the backend API due to browser security policies.
+* **Solution:** Configured **CORS Middleware** in FastAPI to explicitly whitelist the Render frontend URL while blocking unauthorized origins.
+
+### **3. SPA Routing**
+* **Challenge:** Refreshing the page on sub-routes (e.g., `/dashboard`) caused 404 errors on the static server.
+* **Solution:** Implemented a **Rewrite Rule** on Render to redirect all traffic to `index.html`, allowing React Router to handle client-side navigation correctly.
+
+---
+
+## ⚙️ Local Setup Guide
+
+Follow these steps to run the project locally on your machine.
+
+### **Prerequisites**
+* Node.js & npm
+* Python 3.10+
+* PostgreSQL (Local instance or Cloud URL)
+
+### **1. Clone the Repository**
+```bash
+git clone [https://github.com/YourUsername/project-management-app-trello.git](https://github.com/YourUsername/project-management-app-trello.git)
+cd project-management-app-trello
+
